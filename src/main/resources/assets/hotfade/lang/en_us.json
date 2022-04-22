@@ -1,0 +1,6 @@
+{
+  "hotfade.config.title": "Hotfade Options",
+  "hotfade.config.min": "Minimum Opacity: %d%",
+  "hotfade.config.max": "Maximum Opacity: %d%",
+  "hotfade.config.save": "Saving changes..."
+}
