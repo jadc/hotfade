@@ -8,6 +8,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
+import red.jad.hotfade.config.ConfigManager;
 
 @Environment(EnvType.CLIENT)
 public class Hotfade implements ClientModInitializer {
@@ -18,16 +19,10 @@ public class Hotfade implements ClientModInitializer {
 
     // Fading
     private static long lastInteractionTime;
-    private static final long FADE_OUT_DELAY = 5000L; // 5000
-    private static final long FADE_OUT_DURATION = 2000L; // 2000
-    public static float MAX_ALPHA = 1.0f;
-    public static float MIN_ALPHA = 0.0f;
-    public static float PREVIEW_ALPHA = -1;
 
     public static float getAlpha(){
-        if(PREVIEW_ALPHA != -1) return PREVIEW_ALPHA;
-        long l = lastInteractionTime - Util.getMeasuringTimeMs() + FADE_OUT_DELAY;
-        return MathHelper.clamp((float) l / FADE_OUT_DURATION, MIN_ALPHA, MAX_ALPHA);
+        long l = lastInteractionTime - Util.getMeasuringTimeMs() + ConfigManager.FADE_OUT_DELAY;
+        return MathHelper.clamp((float) l / ConfigManager.FADE_OUT_DURATION, ConfigManager.MIN_ALPHA, ConfigManager.MAX_ALPHA);
     }
 
     public static void showHUD(){
@@ -40,6 +35,6 @@ public class Hotfade implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-
+        ConfigManager.load();
     }
 }

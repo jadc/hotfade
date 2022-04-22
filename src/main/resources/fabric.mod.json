@@ -10,7 +10,9 @@
   "icon": "assets/hotfade/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client": [ "red.jad.hotfade.Hotfade" ],
+    "client": [
+      "red.jad.hotfade.Hotfade"
+    ],
     "modmenu": [ "red.jad.hotfade.config.ModMenuIntegration" ]
   },
   "mixins": [ "hotfade.mixins.json" ],
