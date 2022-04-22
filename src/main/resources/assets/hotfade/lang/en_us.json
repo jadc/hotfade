@@ -1,8 +1,5 @@
 {
   "hotfade.config.title": "Hotfade Options",
-  "hotfade.config.min": "Minimum Opacity",
-  "hotfade.config.min.slider": "Minimum Opacity: %s",
-  "hotfade.config.max": "Maximum Opacity",
-  "hotfade.config.max.slider": "Maximum Opacity: %s",
-  "hotfade.config.save": "Saving changes..."
+  "hotfade.config.min": "Minimum Opacity: %s",
+  "hotfade.config.max": "Maximum Opacity: %s"
 }
