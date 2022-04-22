@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "hotfade",
+  "version": "${version}",
+  "name": "Hotfade",
+  "description": "",
+  "authors": ["jadc"],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/hotfade/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [ "red.jad.hotfade.hotfade.Hotfade" ],
+    "modmenu": [ "red.jad.hotfade.config.ModMenuIntegration" ]
+  },
+  "mixins": [ "hotfade.mixins.json" ],
+  "depends": {
+    "fabricloader": ">=0.13.3",
+    "minecraft": "1.18.2"
+  }
+}
