@@ -21,7 +21,11 @@ public class Hotfade implements ClientModInitializer {
     private static long lastInteractionTime;
 
     public static float getAlpha(){
-        long l = lastInteractionTime - Util.getMeasuringTimeMs() + ConfigManager.FADE_OUT_DELAY;
+        return getAlpha(lastInteractionTime);
+    }
+
+    public static float getAlpha(long lastInteract){
+        long l = lastInteract - Util.getMeasuringTimeMs() + ConfigManager.FADE_OUT_DELAY;
         return MathHelper.clamp((float) l / ConfigManager.FADE_OUT_DURATION, ConfigManager.MIN_ALPHA, ConfigManager.MAX_ALPHA);
     }
 
