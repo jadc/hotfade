@@ -2,6 +2,6 @@
   "hotfade.config.title": "Hotfade Options",
   "hotfade.config.min": "Minimum Opacity: %s",
   "hotfade.config.max": "Maximum Opacity: %s",
-  "hotfade.config.fade_out_delay": "Fade Delay",
-  "hotfade.config.fade_out_duration": "Fade Duration"
+  "hotfade.config.fade_out_delay": "Duration Visible (ms)",
+  "hotfade.config.fade_out_duration": "Duration Fading (ms)"
 }
