@@ -34,20 +34,23 @@ public class ConfigScreen extends Screen {
         this.addDrawableChild(new AlphaSliderWidget(ConfigManager.MAX_ALPHA, this.width / 2 - 100, 140,"hotfade.config.max") {
             @Override
             protected void applyValue() {
-                ConfigManager.MAX_ALPHA = (float)MathHelper.clamp(this.value, 0.0, 1.0);
+                showHUD();
+                ConfigManager.MAX_ALPHA = MathHelper.floor(MathHelper.clampedLerp(0.0, 100.0, this.value));
             }
         });
         // Min alpha slider
         this.addDrawableChild(new AlphaSliderWidget(ConfigManager.MIN_ALPHA, this.width / 2 - 100, 165,"hotfade.config.min") {
             @Override
             protected void applyValue() {
-                ConfigManager.MIN_ALPHA = (float)MathHelper.clamp(this.value, 0.0, 1.0);
+                showHUD();
+                ConfigManager.MIN_ALPHA = MathHelper.floor(MathHelper.clampedLerp(0.0, 100.0, this.value));
             }
         });
         // Fade out delay input
         this.fadeOutDelayField = this.addDrawableChild(new TextFieldWidget(this.textRenderer, this.width / 2 + 100 - 42, 190, 42, 20, new TranslatableText("hotfade.config.fade_out_delay")));
         this.fadeOutDelayField.setText("" + ConfigManager.FADE_OUT_DELAY);
         this.fadeOutDelayField.setChangedListener(text -> {
+            showHUD();
             try {
                 ConfigManager.FADE_OUT_DELAY = Long.parseLong(text);
             }
@@ -57,6 +60,7 @@ public class ConfigScreen extends Screen {
         this.fadeOutDurationField = this.addDrawableChild(new TextFieldWidget(this.textRenderer, this.width / 2 + 100 - 42, 215, 42, 20, new TranslatableText("hotfade.config.fade_out_duration")));
         this.fadeOutDurationField.setText("" + ConfigManager.FADE_OUT_DURATION);
         this.fadeOutDurationField.setChangedListener(text -> {
+            showHUD();
             try {
                 ConfigManager.FADE_OUT_DURATION = Long.parseLong(text);
             }
@@ -72,7 +76,7 @@ public class ConfigScreen extends Screen {
 
     private long lastInteractionTime;
     private void drawHUDPreview(MatrixStack matrices){
-        if(Util.getMeasuringTimeMs() % (ConfigManager.FADE_OUT_DURATION + ConfigManager.FADE_OUT_DELAY + 2000)/1000 == 0) lastInteractionTime = Util.getMeasuringTimeMs();
+        if(Util.getMeasuringTimeMs() - lastInteractionTime  > ConfigManager.FADE_OUT_DURATION + ConfigManager.FADE_OUT_DELAY + 1000) showHUD();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, Hotfade.getAlpha(lastInteractionTime));
@@ -80,6 +84,10 @@ public class ConfigScreen extends Screen {
         RenderSystem.setShaderTexture(0, HUD_PREVIEW_TEXTURE);
         this.drawTexture(matrices, this.width / 2 - 128, 75, 0, 0, 256, 256);
         RenderSystem.disableBlend();
+    }
+
+    private void showHUD(){
+        lastInteractionTime = Util.getMeasuringTimeMs();
     }
 
     @Override
@@ -94,8 +102,8 @@ public class ConfigScreen extends Screen {
         this.drawHUDPreview(matrices);
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 50, 0xFFFFFF);
 
-        this.textRenderer.drawWithShadow(matrices, new TranslatableText("hotfade.config.fade_out_delay"), this.width / 2 - 100, 190+5, 0xFFFFFF);
-        this.textRenderer.drawWithShadow(matrices, new TranslatableText("hotfade.config.fade_out_duration"), this.width / 2 - 100, 215+5, 0xFFFFFF);
+        this.textRenderer.drawWithShadow(matrices, new TranslatableText("hotfade.config.fade_out_delay"), this.width / 2 - 100, 190+6, 0xFFFFFF);
+        this.textRenderer.drawWithShadow(matrices, new TranslatableText("hotfade.config.fade_out_duration"), this.width / 2 - 100, 215+6, 0xFFFFFF);
 
         super.render(matrices, mouseX, mouseY, delta);
     }

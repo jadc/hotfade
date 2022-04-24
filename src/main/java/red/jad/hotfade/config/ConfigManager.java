@@ -10,8 +10,8 @@ import java.io.*;
 public class ConfigManager {
     public static long FADE_OUT_DELAY = 5000L; // 5000
     public static long FADE_OUT_DURATION = 2000L; // 2000
-    public static float MAX_ALPHA = 1.0f;
-    public static float MIN_ALPHA = 0.0f;
+    public static int MAX_ALPHA = 100;
+    public static int MIN_ALPHA = 0;
 
     private static File file;
     private static final String fileName = Hotfade.MOD_ID + ".json";
@@ -29,8 +29,8 @@ public class ConfigManager {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 JsonObject json = JsonParser.parseReader(br).getAsJsonObject();
 
-                MAX_ALPHA = json.get("max_alpha").getAsFloat();
-                MIN_ALPHA = json.get("min_alpha").getAsFloat();
+                MAX_ALPHA = json.get("max_alpha").getAsInt();
+                MIN_ALPHA = json.get("min_alpha").getAsInt();
                 FADE_OUT_DELAY = json.get("fade_out_delay").getAsLong();
                 FADE_OUT_DURATION = json.get("fade_out_duration").getAsLong();
 
