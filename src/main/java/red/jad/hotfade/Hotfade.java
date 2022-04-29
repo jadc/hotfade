@@ -32,6 +32,12 @@ public class Hotfade implements ClientModInitializer {
         return MathHelper.clamp((float) l / ConfigManager.FADE_OUT_DURATION, ((float)ConfigManager.MIN_ALPHA)/100, ((float)ConfigManager.MAX_ALPHA)/100);
     }
 
+    public static int getAlphaColor(int color){
+        int alpha = MathHelper.clamp((int)(Hotfade.getAlpha()*255), 4, 255);
+        // return (color & 0xFFFFFF) | alpha << 24;
+        return color + (alpha << 24);
+    }
+
     public static void showHUD(){
         lastInteractionTime = Util.getMeasuringTimeMs();
     }
@@ -44,8 +50,9 @@ public class Hotfade implements ClientModInitializer {
     public static boolean isNoticeablyEffected(PlayerEntity p){
         // If underwater and can drown
         if (p.isSubmergedIn(FluidTags.WATER)){
-            if(p.hasStatusEffect(StatusEffects.WATER_BREATHING)) return true;
-            if(p.hasStatusEffect(StatusEffects.CONDUIT_POWER)) return true;
+            if(p.hasStatusEffect(StatusEffects.WATER_BREATHING)) return false;
+            if(p.hasStatusEffect(StatusEffects.CONDUIT_POWER)) return false;
+            return true;
         }
 
         // If hunger is low
