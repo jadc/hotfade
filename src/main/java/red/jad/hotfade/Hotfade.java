@@ -6,6 +6,9 @@ import com.google.gson.GsonBuilder;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.tag.FluidTags;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import red.jad.hotfade.config.ConfigManager;
@@ -34,7 +37,20 @@ public class Hotfade implements ClientModInitializer {
     }
 
     public static boolean shouldUnfadeablesBeHidden(){
-        return getAlpha() <= 0.1f;
+        //return getAlpha() <= 0.1f;
+        return false;
+    }
+
+    public static boolean isNoticeablyEffected(PlayerEntity p){
+        if (p.isSubmergedIn(FluidTags.WATER)){
+            if(p.hasStatusEffect(StatusEffects.WATER_BREATHING)) return true;
+            if(p.hasStatusEffect(StatusEffects.CONDUIT_POWER)) return true;
+        }
+        if(p.getHungerManager().getSaturationLevel() <= 0){
+            if(p.getHungerManager().getFoodLevel() <= 6) return true;
+        }
+
+        return false;
     }
 
     @Override

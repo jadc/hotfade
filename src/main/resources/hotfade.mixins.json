@@ -3,13 +3,17 @@
   "minVersion": "0.8",
   "package": "red.jad.hotfade.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [ ],
+  "mixins": [
+  ],
   "client": [
     "InjectMixins$InGameHudAlphaMixin",
-    "TriggerMixins$ClientPlayerEntityMixin",
     "InjectMixins$ItemRendererMixin",
+    "TestMixins$ItemRendererMixin",
+    "TriggerMixins$ClientPlayerEntityMixin",
+    "TriggerMixins$InGameHudMixin",
     "TriggerMixins$MinecraftClientMixin",
-    "TriggerMixins$PlayerInventoryMixin"
+    "TriggerMixins$PlayerInventoryMixin",
+    "TestMixins$InGameHudTestMixin"
   ],
   "injectors": {
     "defaultRequire": 1

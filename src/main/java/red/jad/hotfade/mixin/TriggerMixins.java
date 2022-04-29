@@ -6,8 +6,8 @@ import net.minecraft.client.input.Input;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,7 +21,7 @@ public class TriggerMixins {
     public static class MinecraftClientMixin {
         // If slot changes via key press
         @Inject( method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getInventory()Lnet/minecraft/entity/player/PlayerInventory;") )
-        private void slotKeyChange(CallbackInfo ci){
+        private void hotfade$slotChangeViaKey(CallbackInfo ci){
             Hotfade.showHUD();
         }
     }
@@ -30,7 +30,7 @@ public class TriggerMixins {
     public static class PlayerInventoryMixin {
         // If slot changes via scrolling
         @Inject( method = "scrollInHotbar", at = @At(value = "HEAD"))
-        private void slotScrollChange(double scrollAmount, CallbackInfo ci){
+        private void hotfade$slotChangeViaScroll(double scrollAmount, CallbackInfo ci){
             Hotfade.showHUD();
         }
     }
@@ -39,23 +39,15 @@ public class TriggerMixins {
     public static class ClientPlayerEntityMixin {
         @Shadow public Input input;
 
-        @Shadow @Final protected MinecraftClient client;
-
-        // If health increases or decreases
-        @Inject( method = "updateHealth", at = @At(value = "HEAD") )
-        private void healthChange(float health, CallbackInfo ci){
-            Hotfade.showHUD();
-        }
-
         // If experience increases or decreases
         @Inject( method = "setExperience", at = @At(value = "HEAD") )
-        private void expChange(float progress, int total, int level, CallbackInfo ci){
+        private void hotfade$expChange(float progress, int total, int level, CallbackInfo ci){
             Hotfade.showHUD();
         }
 
         // If jump bar changes
         @Inject( method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getVehicle()Lnet/minecraft/entity/Entity;") )
-        private void jumpBarChange(CallbackInfo ci){
+        private void hotfade$jumpBarChange(CallbackInfo ci){
             if(this.input.jumping) Hotfade.showHUD();
         }
     }
@@ -64,15 +56,26 @@ public class TriggerMixins {
     public static abstract class InGameHudMixin {
 
         @Shadow protected abstract LivingEntity getRiddenEntity();
+        @Shadow protected abstract PlayerEntity getCameraPlayer();
 
-        @Inject(
-                method = "renderStatusBars",
-                at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Util;getMeasuringTimeMs()J")
-        )
-        private void statusChange(MatrixStack matrices, CallbackInfo ci){
+        @Inject( method = "renderStatusBars", at = @At(value = "HEAD") )
+        private void hotfade$statusChange(MatrixStack matrices, CallbackInfo ci){
+            // General status change
+            if(Hotfade.isNoticeablyEffected(getCameraPlayer())) Hotfade.showHUD();
+
+            // Mount health change
             if(this.getRiddenEntity() != null) {
                 if (this.getRiddenEntity().timeUntilRegen > 0) Hotfade.showHUD();
             }
         }
+
+        // If health changes
+        @Inject( method = "renderHealthBar", at = @At(value = "HEAD") )
+        private void hotfade$healthChange(MatrixStack matrices, PlayerEntity player, int x, int y, int lines, int regeneratingHeartIndex, float maxHealth, int lastHealth, int health, int absorption, boolean blinking, CallbackInfo ci){
+            if(blinking) Hotfade.showHUD();
+        }
+
+        // If health dangerously low (wiggling)
+
     }
 }
