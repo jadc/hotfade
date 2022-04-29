@@ -52,8 +52,7 @@ public class InjectMixins {
                 index = 4
         )
         private int hotfade$setExperienceNumberAlpha(int color){
-            int alpha = MathHelper.clamp((int)(Hotfade.getAlpha()*255), 4, 255);
-            return (color & 0xFFFFFF) | alpha << 24;
+            return Hotfade.getAlphaColor(color);
         }
 
         @Inject(
@@ -84,6 +83,27 @@ public class InjectMixins {
         )
         private void hotfade$blendDurability(TextRenderer renderer, ItemStack stack, int x, int y, String countLabel, CallbackInfo ci){
             RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+        }
+
+        /*
+        @Inject(
+                method = "renderGuiItemOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V",
+                at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;draw(Ljava/lang/String;FFIZLnet/minecraft/util/math/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;ZII)I")
+        )
+        private void hotfade$setCountAlpha(TextRenderer renderer, ItemStack stack, int x, int y, String countLabel, CallbackInfo ci){
+
+        }
+
+         */
+
+        @ModifyArg(
+                method = "renderGuiItemOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V",
+                at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;draw(Ljava/lang/String;FFIZLnet/minecraft/util/math/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;ZII)I"),
+                index = 3
+        )
+        private int hotfade$setCountAlpha(int color){
+            return Hotfade.getAlphaColor(color);
         }
 
         @ModifyArg(
