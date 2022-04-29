@@ -42,10 +42,13 @@ public class Hotfade implements ClientModInitializer {
     }
 
     public static boolean isNoticeablyEffected(PlayerEntity p){
+        // If underwater and can drown
         if (p.isSubmergedIn(FluidTags.WATER)){
             if(p.hasStatusEffect(StatusEffects.WATER_BREATHING)) return true;
             if(p.hasStatusEffect(StatusEffects.CONDUIT_POWER)) return true;
         }
+
+        // If hunger is low
         if(p.getHungerManager().getSaturationLevel() <= 0){
             if(p.getHungerManager().getFoodLevel() <= 6) return true;
         }

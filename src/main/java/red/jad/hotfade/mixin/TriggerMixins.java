@@ -8,6 +8,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -58,10 +59,14 @@ public class TriggerMixins {
         @Shadow protected abstract LivingEntity getRiddenEntity();
         @Shadow protected abstract PlayerEntity getCameraPlayer();
 
+        @Shadow @Final private MinecraftClient client;
+
         @Inject( method = "renderStatusBars", at = @At(value = "HEAD") )
         private void hotfade$statusChange(MatrixStack matrices, CallbackInfo ci){
             // General status change
             if(Hotfade.isNoticeablyEffected(getCameraPlayer())) Hotfade.showHUD();
+
+            System.out.println(this.client.currentScreen);
 
             // Mount health change
             if(this.getRiddenEntity() != null) {
@@ -69,13 +74,14 @@ public class TriggerMixins {
             }
         }
 
-        // If health changes
+
         @Inject( method = "renderHealthBar", at = @At(value = "HEAD") )
         private void hotfade$healthChange(MatrixStack matrices, PlayerEntity player, int x, int y, int lines, int regeneratingHeartIndex, float maxHealth, int lastHealth, int health, int absorption, boolean blinking, CallbackInfo ci){
-            if(blinking) Hotfade.showHUD();
+            if(blinking) Hotfade.showHUD(); // If health changes
+            if(lastHealth + absorption <= 4) Hotfade.showHUD(); // If health dangerously low (wiggling)
         }
 
-        // If health dangerously low (wiggling)
+
 
     }
 }

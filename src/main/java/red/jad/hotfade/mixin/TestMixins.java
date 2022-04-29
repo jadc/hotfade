@@ -1,9 +1,12 @@
 package red.jad.hotfade.mixin;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,21 +30,16 @@ public class TestMixins {
 
          */
 
-        @ModifyArg(
-                method = "renderGuiQuad",
-                at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/VertexConsumer;color(IIII)Lnet/minecraft/client/render/VertexConsumer;"),
-                index = 3
-        )
-        private int quad(int var1){
-            return (int) (Hotfade.getAlpha()*255);
-        }
+
+
+
     }
 
     @Mixin(InGameHud.class)
     public static class InGameHudTestMixin {
 
-        @Inject( method = "renderHealthBar", at = @At(value = "TAIL") )
-        private void test(MatrixStack matrices, PlayerEntity player, int x, int y, int lines, int regeneratingHeartIndex, float maxHealth, int lastHealth, int health, int absorption, boolean blinking, CallbackInfo ci){
+        @Inject( method = "renderHotbar", at = @At(value = "TAIL") )
+        private void test(float tickDelta, MatrixStack matrices, CallbackInfo ci){
 
         }
     }

@@ -1,6 +1,7 @@
 package red.jad.hotfade.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -77,5 +78,21 @@ public class InjectMixins {
 
     @Mixin(ItemRenderer.class)
     public static class ItemRendererMixin {
+        @Inject(
+                method = "renderGuiItemOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V",
+                at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lcom/mojang/blaze3d/systems/RenderSystem;disableBlend()V")
+        )
+        private void hotfade$blendDurability(TextRenderer renderer, ItemStack stack, int x, int y, String countLabel, CallbackInfo ci){
+            RenderSystem.enableBlend();
+        }
+
+        @ModifyArg(
+                method = "renderGuiQuad",
+                at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/VertexConsumer;color(IIII)Lnet/minecraft/client/render/VertexConsumer;"),
+                index = 3
+        )
+        private int hotfade$setDurabilityAlpha(int var1){
+            return (int) (Hotfade.getAlpha()*255);
+        }
     }
 }
