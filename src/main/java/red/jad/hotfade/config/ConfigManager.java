@@ -13,7 +13,7 @@ public class ConfigManager {
     public static int MAX_ALPHA = 100;
     public static int MIN_ALPHA = 0;
 
-    private static File file;
+    public static File file;
     private static final String fileName = Hotfade.MOD_ID + ".json";
     private static void createConfigFile() {
         if (file == null) {
