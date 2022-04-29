@@ -23,7 +23,7 @@ public class InjectMixins {
                 at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderColor(FFFF)V"),
                 index = 3
         )
-        private float setHotbarAlpha(float alpha){
+        private float hotfade$setHotbarAlpha(float alpha){
             return Hotfade.getAlpha();
         }
 
@@ -31,7 +31,7 @@ public class InjectMixins {
                 method = "renderStatusBars",
                 at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Util;getMeasuringTimeMs()J")
         )
-        private void setStatusBarsAlpha(MatrixStack matrices, CallbackInfo ci){
+        private void hotfade$setStatusBarsAlpha(MatrixStack matrices, CallbackInfo ci){
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, Hotfade.getAlpha());
         }
 
@@ -40,7 +40,7 @@ public class InjectMixins {
                 method = "renderExperienceBar",
                 at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getNextLevelExperience()I")
         )
-        private void setExperienceBarAlpha(MatrixStack matrices, int x, CallbackInfo ci){
+        private void hotfade$setExperienceBarAlpha(MatrixStack matrices, int x, CallbackInfo ci){
             RenderSystem.enableBlend();
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, Hotfade.getAlpha());
         }
@@ -50,7 +50,7 @@ public class InjectMixins {
                 at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;draw(Lnet/minecraft/client/util/math/MatrixStack;Ljava/lang/String;FFI)I"),
                 index = 4
         )
-        private int setExperienceNumberAlpha(int color){
+        private int hotfade$setExperienceNumberAlpha(int color){
             int alpha = MathHelper.clamp((int)(Hotfade.getAlpha()*255), 4, 255);
             return (color & 0xFFFFFF) | alpha << 24;
         }
@@ -59,18 +59,18 @@ public class InjectMixins {
                 method = "renderMountJumpBar",
                 at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderTexture(ILnet/minecraft/util/Identifier;)V")
         )
-        private void setMountJumpBarAlpha(MatrixStack matrices, int x, CallbackInfo ci){
+        private void hotfade$setMountJumpBarAlpha(MatrixStack matrices, int x, CallbackInfo ci){
             RenderSystem.enableBlend();
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, Hotfade.getAlpha());
         }
 
-        // Unfadeables
+        // How
         @Inject(
                 method = "renderHotbarItem",
                 at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z"),
                 cancellable = true
         )
-        private void hideItems(int x, int y, float tickDelta, PlayerEntity player, ItemStack stack, int seed, CallbackInfo ci){
+        private void hotfade$hideItems(int x, int y, float tickDelta, PlayerEntity player, ItemStack stack, int seed, CallbackInfo ci){
             if(Hotfade.shouldUnfadeablesBeHidden()) ci.cancel();
         }
     }
