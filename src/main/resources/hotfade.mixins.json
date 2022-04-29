@@ -8,11 +8,11 @@
   "client": [
     "InjectMixins$InGameHudAlphaMixin",
     "InjectMixins$ItemRendererMixin",
-    "TestMixins$ItemRendererMixin",
     "TriggerMixins$ClientPlayerEntityMixin",
     "TriggerMixins$InGameHudMixin",
     "TriggerMixins$MinecraftClientMixin",
     "TriggerMixins$PlayerInventoryMixin",
+    "TestMixins$ItemRendererMixin",
     "TestMixins$InGameHudTestMixin"
   ],
   "injectors": {

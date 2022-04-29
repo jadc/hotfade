@@ -5,9 +5,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -63,16 +61,6 @@ public class InjectMixins {
             RenderSystem.enableBlend();
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, Hotfade.getAlpha());
         }
-
-        // How
-        @Inject(
-                method = "renderHotbarItem",
-                at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z"),
-                cancellable = true
-        )
-        private void hotfade$hideItems(int x, int y, float tickDelta, PlayerEntity player, ItemStack stack, int seed, CallbackInfo ci){
-            if(Hotfade.shouldUnfadeablesBeHidden()) ci.cancel();
-        }
     }
 
     @Mixin(ItemRenderer.class)
@@ -81,21 +69,10 @@ public class InjectMixins {
                 method = "renderGuiItemOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V",
                 at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lcom/mojang/blaze3d/systems/RenderSystem;disableBlend()V")
         )
-        private void hotfade$blendDurability(TextRenderer renderer, ItemStack stack, int x, int y, String countLabel, CallbackInfo ci){
+        private void hotfade$undeblendDurability(TextRenderer renderer, ItemStack stack, int x, int y, String countLabel, CallbackInfo ci){
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
         }
-
-        /*
-        @Inject(
-                method = "renderGuiItemOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V",
-                at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;draw(Ljava/lang/String;FFIZLnet/minecraft/util/math/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;ZII)I")
-        )
-        private void hotfade$setCountAlpha(TextRenderer renderer, ItemStack stack, int x, int y, String countLabel, CallbackInfo ci){
-
-        }
-
-         */
 
         @ModifyArg(
                 method = "renderGuiItemOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V",

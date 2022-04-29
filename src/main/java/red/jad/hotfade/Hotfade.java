@@ -42,11 +42,6 @@ public class Hotfade implements ClientModInitializer {
         lastInteractionTime = Util.getMeasuringTimeMs();
     }
 
-    public static boolean shouldUnfadeablesBeHidden(){
-        //return getAlpha() <= 0.1f;
-        return false;
-    }
-
     public static boolean isNoticeablyEffected(PlayerEntity p){
         // If underwater and can drown
         if (p.isSubmergedIn(FluidTags.WATER)){

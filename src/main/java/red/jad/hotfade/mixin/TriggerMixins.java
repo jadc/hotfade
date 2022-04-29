@@ -66,7 +66,7 @@ public class TriggerMixins {
             // General status change
             if(Hotfade.isNoticeablyEffected(getCameraPlayer())) Hotfade.showHUD();
 
-            System.out.println(this.client.currentScreen);
+            // System.out.println(this.client.currentScreen);
 
             // Mount health change
             if(this.getRiddenEntity() != null) {
